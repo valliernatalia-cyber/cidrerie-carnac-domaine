@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cidrerie de Carnac - Domaine</title>
+  <meta name="description" content="Cidrerie de Carnac, domaine familial bio a Carnac : cidres, jus de pomme, vinaigre et produits fermiers en vente directe.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #fbf7ed;
+      --cream: #f4ead7;
+      --ink: #23322b;
+      --muted: #6b746d;
+      --leaf: #58754d;
+      --leaf-dark: #314c35;
+      --cider: #c9832f;
+      --gold: #edc66b;
+      --blue: #335e66;
+      --white: #fffdf8;
+      --line: rgba(35, 50, 43, .16);
+      --shadow: 0 22px 60px rgba(35, 50, 43, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body.is-loading {
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(18px, 4vw, 56px);
+      border-bottom: 1px solid rgba(255, 253, 248, .28);
+      background: rgba(35, 50, 43, .78);
+      color: var(--white);
+      backdrop-filter: blur(18px);
+      animation: navDrop .7s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 210px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid rgba(255, 253, 248, .38);
+      border-radius: 50%;
+      background: rgba(255, 253, 248, .14);
+      color: var(--gold);
+      font-family: Fraunces, serif;
+      font-size: 20px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: clamp(14px, 2.5vw, 30px);
+      color: rgba(255, 253, 248, .82);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav a:hover { color: var(--gold); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .button:hover { transform: translateY(-2px); }
+
+    .button.primary {
+      background: var(--gold);
+      color: #2a2416;
+    }
+
+    .button.secondary {
+      border-color: rgba(255, 253, 248, .46);
+      color: var(--white);
+    }
+
+    .button.dark {
+      background: var(--ink);
+      color: var(--white);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 78vh;
+      display: grid;
+      align-items: start;
+      overflow: hidden;
+      background:
+        linear-gradient(110deg, rgba(26, 39, 32, .88) 0%, rgba(26, 39, 32, .55) 43%, rgba(26, 39, 32, .2) 100%),
+        url("assets/hero-orchard.png") center / cover;
+      color: var(--white);
+      animation: heroFocus 1.25s ease-out both;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 180px;
+      background: linear-gradient(0deg, var(--paper), rgba(251, 247, 237, 0));
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: clamp(70px, 10vh, 108px) 0 160px;
+      animation: riseIn .9s .18s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 650;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 850px;
+      font-size: clamp(46px, 8vw, 106px);
+    }
+
+    .lead {
+      max-width: 610px;
+      margin: 24px 0 32px;
+      color: rgba(255, 253, 248, .86);
+      font-size: clamp(18px, 2vw, 22px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .hero-panel {
+      position: absolute;
+      right: clamp(18px, 5vw, 70px);
+      bottom: 44px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(92px, 1fr));
+      width: min(520px, calc(100% - 36px));
+      overflow: hidden;
+      border: 1px solid rgba(255, 253, 248, .3);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .92);
+      box-shadow: var(--shadow);
+      color: var(--ink);
+      animation: panelIn .9s .5s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .fact {
+      min-height: 104px;
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .fact:last-child { border-right: 0; }
+
+    .fact strong {
+      display: block;
+      color: var(--leaf-dark);
+      font-family: Fraunces, serif;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .fact span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    section {
+      padding: clamp(70px, 10vw, 124px) clamp(18px, 4vw, 56px);
+    }
+
+    .wrap {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 440px);
+      gap: clamp(28px, 6vw, 90px);
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(34px, 5vw, 68px);
+    }
+
+    .section-head p,
+    .text p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .image-tile {
+      min-height: 500px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: var(--shadow);
+    }
+
+    .image-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .text-panel {
+      display: grid;
+      align-content: center;
+      gap: 28px;
+      padding: clamp(28px, 5vw, 62px);
+      border-left: 3px solid var(--cider);
+      background: var(--white);
+    }
+
+    .text-panel h3 {
+      color: var(--leaf-dark);
+      font-size: clamp(28px, 4vw, 46px);
+    }
+
+    .mini-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fcfaf4;
+      color: var(--leaf-dark);
+      font-weight: 700;
+    }
+
+    .products {
+      background: var(--leaf-dark);
+      color: var(--white);
+    }
+
+    .place {
+      padding-top: 0;
+      background: linear-gradient(180deg, var(--paper) 0%, #eef0e6 100%);
+    }
+
+    .place-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--ink);
+      box-shadow: var(--shadow);
+      color: var(--white);
+    }
+
+    .place-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      object-fit: cover;
+    }
+
+    .place-copy {
+      display: grid;
+      align-content: center;
+      gap: 22px;
+      padding: clamp(30px, 5vw, 62px);
+      background: linear-gradient(135deg, rgba(35, 50, 43, .96), rgba(51, 94, 102, .88));
+    }
+
+    .place-copy h2 {
+      font-size: clamp(34px, 5vw, 62px);
+    }
+
+    .place-copy p {
+      margin: 0;
+      color: rgba(255, 253, 248, .78);
+      font-size: 17px;
+    }
+
+    .place-note {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 253, 248, .24);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .products .section-head p { color: rgba(255, 253, 248, .72); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      position: relative;
+      border-radius: 8px;
+      background: #1f3327;
+    }
+
+    .product-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: .76;
+      transition: transform .5s ease;
+    }
+
+    .product-card:nth-child(2) img { object-position: 62% center; }
+    .product-card:nth-child(3) img { object-position: 36% center; }
+    .product-card:nth-child(4) img { object-position: 76% center; }
+
+    .product-card:hover img { transform: scale(1.06); }
+
+    .product-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(18, 27, 22, .9), rgba(18, 27, 22, .05));
+    }
+
+    .product-card div {
+      position: relative;
+      z-index: 1;
+      padding: 24px;
+    }
+
+    .product-card h3 {
+      margin-bottom: 8px;
+      font-size: 27px;
+    }
+
+    .product-card p {
+      margin: 0;
+      color: rgba(255, 253, 248, .78);
+      font-size: 14px;
+    }
+
+    .visit {
+      background:
+        linear-gradient(90deg, rgba(251, 247, 237, .96) 0%, rgba(251, 247, 237, .88) 48%, rgba(251, 247, 237, .34) 100%),
+        url("assets/farm-shop.png") center / cover;
+    }
+
+    .visit-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 520px) minmax(280px, 1fr);
+      gap: clamp(30px, 8vw, 110px);
+      align-items: center;
+    }
+
+    .visit h2 {
+      margin-bottom: 22px;
+      font-size: clamp(34px, 5vw, 66px);
+    }
+
+    .visit p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .info-board {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 18px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-row:last-child { border-bottom: 0; }
+
+    .info-row strong {
+      color: var(--leaf-dark);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .info-row span { color: var(--muted); }
+
+    .craft {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .craft-item {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .craft-item small {
+      color: var(--cider);
+      font-weight: 800;
+    }
+
+    .craft-item h3 {
+      margin: 14px 0 12px;
+      color: var(--leaf-dark);
+      font-size: 28px;
+    }
+
+    .craft-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 34px clamp(18px, 4vw, 56px);
+      background: #17231d;
+      color: rgba(255, 253, 248, .72);
+    }
+
+    .footer strong {
+      display: block;
+      color: var(--white);
+      font-family: Fraunces, serif;
+      font-size: 24px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px);
+      transition:
+        opacity .75s ease,
+        transform .75s cubic-bezier(.2, .8, .2, 1),
+        filter .75s ease;
+      filter: blur(6px);
+      will-change: opacity, transform, filter;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .reveal[data-reveal="image"] {
+      transform: translateY(28px) scale(.985);
+      transition-duration: .9s;
+    }
+
+    .reveal[data-reveal="image"].is-visible {
+      transform: translateY(0) scale(1);
+    }
+
+    .reveal-delay-1 { transition-delay: .08s; }
+    .reveal-delay-2 { transition-delay: .16s; }
+    .reveal-delay-3 { transition-delay: .24s; }
+
+    @keyframes navDrop {
+      from {
+        opacity: 0;
+        transform: translateY(-18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes heroFocus {
+      from {
+        filter: saturate(.88) brightness(.82);
+        transform: scale(1.015);
+      }
+      to {
+        filter: saturate(1) brightness(1);
+        transform: scale(1);
+      }
+    }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes panelIn {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .001ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .nav a:not(.button) { display: none; }
+      .hero { min-height: 760px; }
+      .hero-panel {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        margin: -92px auto 46px;
+      }
+      .section-head,
+      .story-grid,
+      .visit-layout,
+      .place-card {
+        grid-template-columns: 1fr;
+      }
+      .product-grid,
+      .craft {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .image-tile { min-height: 360px; }
+      .place-card img { min-height: 360px; }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        align-items: center;
+        flex-direction: row;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      .brand {
+        min-width: 0;
+        gap: 10px;
+        font-size: 15px;
+        white-space: nowrap;
+      }
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        font-size: 18px;
+      }
+      .nav {
+        width: auto;
+        flex: 0 0 auto;
+        justify-content: flex-end;
+      }
+      .nav .button {
+        min-height: 40px;
+        padding: 0 14px;
+        font-size: 13px;
+      }
+      .hero {
+        min-height: 680px;
+      }
+      .hero-inner {
+        padding-top: 36px;
+        padding-bottom: 124px;
+      }
+      .hero-panel,
+      .mini-list,
+      .product-grid,
+      .craft {
+        grid-template-columns: 1fr;
+      }
+      .fact {
+        min-height: 86px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .fact:last-child { border-bottom: 0; }
+      .info-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .footer { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="is-loading">
+  <header class="topbar" aria-label="Navigation principale">
+    <a class="brand" href="#top" aria-label="Cidrerie de Carnac">
+      <span class="brand-mark">C</span>
+      <span>Cidrerie de Carnac</span>
+    </a>
+    <nav class="nav">
+      <a href="#domaine">Domaine</a>
+      <a href="#carnac">Carnac</a>
+      <a href="#produits">Produits</a>
+      <a href="#visite">Visite</a>
+      <a class="button primary" href="#contact">Vente directe</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Carnac · Bretagne · Agriculture biologique</span>
+        <h1>Domaine familial, cidres vivants et pommes de bord de mer.</h1>
+        <p class="lead">Une cidrerie artisanale ancree a Carnac, ou le verger, la cave et la vente a la ferme restent au coeur de chaque bouteille.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#produits">Decouvrir la gamme</a>
+          <a class="button secondary" href="#visite">Preparer la visite</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-label="Points forts du domaine">
+        <div class="fact"><strong>Bio</strong><span>Verger conduit avec soin</span></div>
+        <div class="fact"><strong>Ferme</strong><span>Accueil et vente directe</span></div>
+        <div class="fact"><strong>Carnac</strong><span>Entre pierres et ocean</span></div>
+      </div>
+    </section>
+
+    <section id="domaine">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Un domaine qui garde le gout du lieu.</h2>
+          <p>La nouvelle page conserve l'esprit sobre et authentique de la maison : produits fermiers, pommes, accueil familial et territoire breton. Le design met simplement plus d'espace, de rythme et de lisibilite autour de ces marqueurs.</p>
+        </div>
+        <div class="story-grid">
+          <figure class="image-tile">
+            <img src="assets/farm-shop.png" alt="Entree chaleureuse d'une boutique fermiere de cidrerie">
+          </figure>
+          <article class="text-panel">
+            <div>
+              <span class="eyebrow">Domaine familial</span>
+              <h3>Du fruit au cidre, une production lisible et directe.</h3>
+            </div>
+            <p>Pommes a cidre, jus, cidres, vinaigre et produits derives composent une gamme simple a comprendre. Le parcours de page valorise la fabrication, puis guide naturellement vers la visite et l'achat sur place.</p>
+            <ul class="mini-list">
+              <li>Pommes bio</li>
+              <li>Pressage artisanal</li>
+              <li>Cave de degustation</li>
+              <li>Boutique a la ferme</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="carnac" class="place">
+      <div class="wrap">
+        <article class="place-card">
+          <img src="assets/carnac-dolmens.png" alt="Dolmens de Carnac pres d'un verger breton">
+          <div class="place-copy">
+            <span class="eyebrow">Esprit de Carnac</span>
+            <h2>Les pierres anciennes, le verger vivant.</h2>
+            <p>Le domaine gagne a rappeler ce paysage unique : les alignements, les dolmens, la lumiere du littoral et les pommes. Ce repere donne au site une signature locale immediate, sans eloigner le visiteur de la cidrerie.</p>
+            <span class="place-note">Territoire · patrimoine · pomme</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="produits" class="products">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>La gamme maison, claire des le premier regard.</h2>
+          <p>Des cartes visuelles presentent les familles de produits sans noyer l'utilisateur : parfait pour un site vitrine moderne, utilisable sur mobile et rassurant avant une visite.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card">
+            <img src="assets/products-counter.png" alt="Bouteilles de cidre artisanal sur un comptoir de ferme">
+            <div><h3>Cidres</h3><p>Brut, doux, cuvees de caractere et bulles de repas.</p></div>
+          </article>
+          <article class="product-card">
+            <img src="assets/products-counter.png" alt="Bouteilles de jus de pomme artisanal et pommes fraiches">
+            <div><h3>Jus</h3><p>Le fruit pur, pour la table familiale et les pauses simples.</p></div>
+          </article>
+          <article class="product-card">
+            <img src="assets/hero-orchard.png" alt="Verger de pommiers pres du littoral breton">
+            <div><h3>Verger</h3><p>Pommes et savoir-faire agricole au centre du domaine.</p></div>
+          </article>
+          <article class="product-card">
+            <img src="assets/farm-shop.png" alt="Boutique fermiere accueillante pour la degustation">
+            <div><h3>Epicerie</h3><p>Vinaigre, produits derives et idees locales a emporter.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="visite" class="visit">
+      <div class="wrap visit-layout">
+        <div>
+          <span class="eyebrow">Vente a la ferme</span>
+          <h2>Un arret naturel sur la route de Carnac.</h2>
+          <p>Le site pousse vers une action simple : venir au domaine, acheter en direct, poser une question ou verifier les horaires avant de passer.</p>
+          <a class="button dark" href="https://www.cidrerie-carnac.fr/domaine" target="_blank" rel="noreferrer">Voir le site actuel</a>
+        </div>
+        <aside id="contact" class="info-board" aria-label="Informations pratiques">
+          <div class="info-row"><strong>Adresse</strong><span>Domaine de la Cidrerie de Carnac, Carnac, Morbihan</span></div>
+          <div class="info-row"><strong>Accueil</strong><span>Boutique, degustation et vente directe selon horaires de saison</span></div>
+          <div class="info-row"><strong>Public</strong><span>Familles, visiteurs de Carnac, amateurs de produits bretons</span></div>
+          <div class="info-row"><strong>Ton</strong><span>Authentique, agricole, chaleureux, sans effet de luxe artificiel</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Une modernisation discrete, pas une rupture.</h2>
+          <p>Le projet garde les codes naturels et locaux, puis ajoute une structure plus commerciale : promesse, preuves, gamme, visite et contact.</p>
+        </div>
+        <div class="craft">
+          <article class="craft-item">
+            <small>01</small>
+            <h3>Identite</h3>
+            <p>Palette vegetale, cidree et minerale pour rappeler le verger, le produit et Carnac.</p>
+          </article>
+          <article class="craft-item">
+            <small>02</small>
+            <h3>Lecture</h3>
+            <p>Des textes courts, hierarchises, faciles a parcourir sur telephone pendant un sejour.</p>
+          </article>
+          <article class="craft-item">
+            <small>03</small>
+            <h3>Conversion</h3>
+            <p>Des appels a l'action sobres vers la gamme, la visite et la vente directe au domaine.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <strong>Cidrerie de Carnac</strong>
+      <span>Domaine familial bio · Carnac · Bretagne</span>
+    </div>
+    <a class="button primary" href="#top">Retour en haut</a>
+  </footer>
+
+  <script>
+    (() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.body.classList.remove("is-loading");
+
+      if (prefersReducedMotion) return;
+
+      const revealGroups = [
+        [".section-head", "text"],
+        [".story-grid", "text"],
+        [".image-tile", "image"],
+        [".text-panel", "text"],
+        [".place-card", "image"],
+        [".product-card", "image"],
+        [".visit-layout", "text"],
+        [".info-board", "text"],
+        [".craft-item", "text"]
+      ];
+
+      const revealItems = [];
+
+      revealGroups.forEach(([selector, type]) => {
+        document.querySelectorAll(selector).forEach((element, index) => {
+          element.classList.add("reveal");
+          element.dataset.reveal = type;
+          if (selector === ".product-card" || selector === ".craft-item") {
+            element.classList.add(`reveal-delay-${(index % 3) + 1}`);
+          }
+          revealItems.push(element);
+        });
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      }, {
+        threshold: 0.16,
+        rootMargin: "0px 0px -8% 0px"
+      });
+
+      revealItems.forEach((element) => observer.observe(element));
+    })();
+  </script>
+</body>
+</html>
